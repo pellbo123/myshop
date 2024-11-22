@@ -1,4 +1,4 @@
-import Sign from "@/components/signup"
+import Sign from "@/components/sign"
 
 export default function Signin() {
     return(

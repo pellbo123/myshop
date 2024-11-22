@@ -1,22 +1,22 @@
 import styles from "./sign.module.css"
-import { TextField, Fade } from "@mui/material"
+import { TextField, Fade, Button } from "@mui/material"
 import { useState } from "react"
 
 export default function Sign() {
     const [idValue, setIdValue] = useState("");
     const [pwValue, setPwValue] = useState("");
-    const [pwCheckValue, setPwCheckField] = useState("")
-
-    const [showPwField,setShowPwField] = useState(false);
+    const [userNameValue, setUserNameValue] = useState("");
+    const [pwCheckValue, setPwCheckValue] = useState("")
+    const [showPwField, setShowPwField] = useState(false);
     const [showPWCheckField, setShowPwCheckField] = useState(false);
-    const [helpText,setHelpText] = useState("6~12자 이내 들어온(굳어진)말, 수자 수용가능")
+
+    const [helpText, setHelpText] = useState("6~12자 이내 들어온(굳어진)말, 수자 수용가능")
     const [pwCheckHelpText, setPwCheckHelpText] = useState(false);
-    const [pwhelpText,setPwHelpText] = useState("6~12자 이내 들어온(굳어진)말, 수자 수용가능")
+    const [pwHelpText, setPwHelpText] = useState("6~12자 이내 들어온(굳어진)말, 수자 수용가능")
+
     const [iderror, setidError] = useState(false);
     const [pwError, setPwError] = useState(false);
     const [pwCheckError, setPwCheckError] = useState(false);
-   
-    
 
     const handleIdChange = (event) => {
         const value = event.target.value;
@@ -35,6 +35,7 @@ export default function Sign() {
             setShowPwField(false);
         }
     };
+
     const handlePwChange = (event) => {
         const value = event.target.value;
         setPwValue(value)
@@ -49,64 +50,101 @@ export default function Sign() {
             setPwCheckHelpText("입당 절차 똑디해라")
 
         }
-    }; 
-        const handlePwCheckChange = (event) => {
-        const value = event.target.value;
-        setPwCheckField (value);
-        }
+    };
 
+    const handlePwCheckChange = (event) => {
+        // 목표 : PwTextField에 있는 값을 가져와서 똑같은지 검사
+        const value = event.target.value;
+        setPwCheckValue(value);
+
+        if (pwValue == value) {
+            setPwCheckError(false)
+            setPwCheckHelpText("비밀번호가 일치합니다.")
+        } else {
+            setPwCheckError(true)
+            setPwCheckHelpText("비밀번호가 일치하지 않습니다.")
+        }
+    };
+
+    const handleUserNameChange = (event) => {
+        const value = event.target.value
+        if (value.length >= 0) {
+            setUserNameValue(value);
+        }
+    }
+    const handleSubmit = () => {
+        if (!iderror && !pwError && !pwCheckError && userNameValue.length > 0 && idValue.length > 0) {
+            alert("회원가입 완료")
+        } else {
+            alert("모든 입력란을 올바르게 채워주세요.")
+        }
+    }
     return (
         <>
-        <div className={styles.wrapper}>
-            <h2 className={styles.head}>입당</h2>
-            <div className={styles.form}>
-            <TextField 
-            error = {iderror}
-            id="id-required"
-            label="☭동무의 입당 서명"
-            placeholder="입력하라우"
-            helperText={helpText}
-            value={idValue}
-            onChange={handleIdChange}
-            fullWidth
-            ></TextField>
-            {showPwField && (
-                <Fade in={showPwField} timeout={500}>
+            <div className={styles.wrapper}>
+                <h2 className={styles.head}>입당</h2>
+                <div className={styles.form}>
                     <TextField
-                    error={pwHelpText}
-                        id="password-required"
-                        label="암구호"
-                        type="password"
-                        placeholder="암구호를 입력하라우"
-                        helperText={pwHelpText}
-                        value={pwValue}
-                        onChange={handlePwChange}
+                        id="username-required"
+                        label="Username"
+                        placeholder="닉네임"
+                        helperText="사용하실 닉네임을 입력해주세요"
+                        value={userNameValue}
+                        onChange={handleUserNameChange}
                         fullWidth
-                    >
-
-                    </TextField>
-
-                </Fade>
-            )}
-            {showPWCheckField && (
-                <Fade in={showPWCheckField} timeout={500}>
+                    ></TextField>
                     <TextField
-                        id="password-match"
-                        label="간첩 확인"
-                        type="password"
-                        placeholder="다시 암구호를 입력하라우"
-                        helperText="6~12자 이내 들어온(굳어진)말, 수자 수용가능"
-                        value={pwCheckValue}
-                        onChange={handlePwCheckChange}
+                        error={iderror}
+                        id="id-required"
+                        label="☭동무의 입당 서명"
+                        placeholder="입력하라우"
+                        helperText={helpText}
+                        value={idValue}
+                        onChange={handleIdChange}
                         fullWidth
-                    >
+                    ></TextField>
+                    {showPwField && (
+                        <Fade in={showPwField} timeout={500}>
+                            <TextField
+                                error={pwHelpText}
+                                id="password-required"
+                                label="암구호"
+                                type="password"
+                                placeholder="암구호를 입력하라우"
+                                helperText={pwHelpText}
+                                value={pwValue}
+                                onChange={handlePwChange}
+                                fullWidth
+                            >
 
-                    </TextField>
+                            </TextField>
 
-                </Fade>
-            )}
+                        </Fade>
+                    )}
+                    {showPWCheckField && (
+                        <Fade in={showPWCheckField} timeout={500}>
+                            <TextField
+                                id="password-match"
+                                label="간첩 확인"
+                                type="password"
+                                placeholder="다시 암구호를 입력하라우"
+                                helperText="6~12자 이내 들어온(굳어진)말, 수자 수용가능"
+                                value={pwCheckValue}
+                                onChange={handlePwCheckChange}
+                                fullWidth
+                            >
+                            </TextField>
+                        </Fade>
+                    )}
+                    <Button
+                        variant="outlined"
+                        color="primary"
+                        fullWidth
+                        onClick={handleSubmit}
+                        style={{ marginTop: '20px' }}
+                    >Continue</Button>
+                </div>
             </div>
-        </div>
         </>
     )
 }
