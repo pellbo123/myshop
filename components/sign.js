@@ -43,11 +43,11 @@ export default function Sign() {
         if (regexPw.test(value)) {
             setShowPwCheckField(true);
             setPwError(false);
-            setHelpText("가능")
+            setHelpText("가능");
         } else {
             setShowPwCheckField(false);
             setPwError(true);
-            setPwCheckHelpText("입당 절차 똑디해라")
+            setPwCheckHelpText("입당 절차 똑디해라");
 
         }
     };
@@ -72,11 +72,27 @@ export default function Sign() {
             setUserNameValue(value);
         }
     }
-    const handleSubmit = () => {
-        if (!iderror && !pwError && !pwCheckError && userNameValue.length > 0 && idValue.length > 0) {
-            alert("회원가입 완료")
-        } else {
-            alert("모든 입력란을 올바르게 채워주세요.")
+    const handleSubmit = async () => {
+        try {
+            const response = await fetch("/api/register", {
+                method : "POST",
+                headers : {
+                    "Content-Type" : "application/json",
+                },
+                body : JSON.stringify({
+                    username: userNameValue,
+                    userId : idValue,
+                    password : pwValue,
+                }),
+            });
+            const data = await response.json();
+            if (response.ok) {
+                alert("ok");
+            } else {
+                alert("fuck");
+            }
+        } catch (error) {
+            console.error("fuck",error);
         }
     }
     return (
@@ -106,7 +122,7 @@ export default function Sign() {
                     {showPwField && (
                         <Fade in={showPwField} timeout={500}>
                             <TextField
-                                error={pwHelpText}
+                                error={pwError}
                                 id="password-required"
                                 label="암구호"
                                 type="password"
